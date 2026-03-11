@@ -34,8 +34,7 @@ export function Professionals() {
                                     <Image
                                         src={fotoImg}
                                         alt="Foto da clinica"
-                                        quality={75}
-
+                                        quality={100}
                                         fill
                                         className="object-cover"
                                     />

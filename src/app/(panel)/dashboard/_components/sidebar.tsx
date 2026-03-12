@@ -60,41 +60,41 @@ export default function SidebarDashboard({ children }: { children: React.ReactNo
                 {/* mostrar apenas quando a sidebar estiver recolhida */}
                 {isCollapsed && (
                     <nav className="flex flex-col gap-1 overflow-hidden">
-                            <span className="text-sm text-gray-400 font-medium mt-1 uppercase">
-                            </span>
+                        <span className="text-sm text-gray-400 font-medium mt-1 uppercase">
+                        </span>
 
-                            <SideBarLink
-                                href="/dashboard"
-                                label="Agendamentos"
-                                pathname={pathname}
-                                isCollapsed={isCollapsed}
-                                icon={<CalendarCheck2 className="w-6 h-6" />}
-                            />
+                        <SideBarLink
+                            href="/dashboard"
+                            label="Agendamentos"
+                            pathname={pathname}
+                            isCollapsed={isCollapsed}
+                            icon={<CalendarCheck2 className="w-6 h-6" />}
+                        />
 
-                            <SideBarLink
-                                href="/dashboard/services"
-                                label="Serviços"
-                                pathname={pathname}
-                                isCollapsed={isCollapsed}
-                                icon={<Folder className="w-6 h-6" />}
-                            />
+                        <SideBarLink
+                            href="/dashboard/services"
+                            label="Serviços"
+                            pathname={pathname}
+                            isCollapsed={isCollapsed}
+                            icon={<Folder className="w-6 h-6" />}
+                        />
 
-                            <SideBarLink
-                                href="/dashboard/profile"
-                                label="Meu perfil"
-                                pathname={pathname}
-                                isCollapsed={isCollapsed}
-                                icon={<Settings className="w-6 h-6" />}
-                            />
+                        <SideBarLink
+                            href="/dashboard/profile"
+                            label="Meu perfil"
+                            pathname={pathname}
+                            isCollapsed={isCollapsed}
+                            icon={<Settings className="w-6 h-6" />}
+                        />
 
-                            <SideBarLink
-                                href="/dashboard/plans"
-                                label="Planos"
-                                pathname={pathname}
-                                isCollapsed={isCollapsed}
-                                icon={<Banknote className="w-6 h-6" />}
-                            />
-                        </nav>
+                        <SideBarLink
+                            href="/dashboard/plans"
+                            label="Planos"
+                            pathname={pathname}
+                            isCollapsed={isCollapsed}
+                            icon={<Banknote className="w-6 h-6" />}
+                        />
+                    </nav>
                 )}
 
 
@@ -154,7 +154,7 @@ export default function SidebarDashboard({ children }: { children: React.ReactNo
                     <Sheet>
                         <div className="flex items-center gap-4">
                             <SheetTrigger asChild >
-                                <Button variant="outline" size="icon" className="md:hidden">
+                                <Button variant="outline" size="icon" className="md:hidden" onClick={() => setIsCollapsed(!isCollapsed)}>
                                     <List className="w-5 h-5" />
                                 </Button>
                             </SheetTrigger>

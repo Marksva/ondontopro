@@ -25,7 +25,6 @@ export function Header() {
         { href: "#Profissionais", label: "Profissionais" },
     ]
 
-    console.log(session)
     async function handleLogin() {
         await handleRegister("github")
     }

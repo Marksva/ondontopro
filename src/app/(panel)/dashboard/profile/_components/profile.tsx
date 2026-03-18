@@ -37,6 +37,8 @@ import imgTest from '../../../../../../public/foto1.png'
 import { cn } from '@/lib/utils'
 import { Prisma } from "@/generated/prisma";
 import { updateProfile } from '../_actions/update-profile'
+import { toast } from "sonner"
+import { formatPhone } from '@/utils/formatPhone'
 
 type UserWithSubscription = Prisma.UserGetPayload<{
   include: {
@@ -104,8 +106,13 @@ export function ProfileContent({ user }: ProfileContentProps) {
       times: selectedHours || []
     })
 
+    if (response.error) {
+      toast.error(response.error, {closeButton: true});
+      return;
+    }
 
-    console.log('resposta', response);
+    // exibir alerta de sucesso
+    toast.success(response.data);
 
   }
 
@@ -179,7 +186,11 @@ export function ProfileContent({ user }: ProfileContentProps) {
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder='Digite o telefone...'
+                          placeholder='(31) 99912-3456'
+                          onChange={(e) => {
+                            const formattedValue = formatPhone(e.target.value)
+                            field.onChange(formattedValue)
+                          }}
                         />
                       </FormControl>
                       <FormMessage />

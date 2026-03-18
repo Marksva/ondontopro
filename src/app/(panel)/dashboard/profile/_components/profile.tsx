@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react'
-import { useProfileForm } from './profile-form'
+import { ProfileFormData, useProfileForm } from './profile-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Form,
@@ -35,13 +35,29 @@ import { ArrowRight } from 'lucide-react'
 
 import imgTest from '../../../../../../public/foto1.png'
 import { cn } from '@/lib/utils'
+import { Prisma } from "@/generated/prisma";
 
-export function ProfileContent() {
+type UserWithSubscription = Prisma.UserGetPayload<{
+  include: {
+    subscription: true
+  }
+}>
 
-  const [selectedHours, setSelectedHours] = useState<string[]>([])
+interface ProfileContentProps {
+  user: UserWithSubscription;
+}
+
+export function ProfileContent({ user }: ProfileContentProps) {
+  const [selectedHours, setSelectedHours] = useState<string[]>(user.times ?? [])
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
-  const form = useProfileForm();
+  const form = useProfileForm({
+    name: user.name,
+    address: user.address,
+    phone: user.phone,
+    status: user.status,
+    timeZone: user.timezone
+  });
 
 
   function generateTimeSlots(): string[] {
@@ -69,18 +85,27 @@ export function ProfileContent() {
     zone.startsWith("America/Sao_Paulo") ||
     zone.startsWith("America/Fortaleza") ||
     zone.startsWith("America/Recife") ||
-    zone.startsWith("America/Bahia$") ||
+    zone.startsWith("America/Bahia") ||
     zone.startsWith("America/Belem") ||
     zone.startsWith("America/Manaus") ||
     zone.startsWith("America/Cuiaba") ||
     zone.startsWith("America/Boa_Vista")
   );
 
+  async function onSubmit(values: ProfileFormData) {
+
+    const profileData = {
+      ...values,
+      times: selectedHours
+    }
+    console.log("values: ", profileData)
+  }
+
 
   return (
     <div className='mx-auto'>
       <Form {...form}>
-        <form>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardHeader>
               <CardTitle>Meu Perfil</CardTitle>
@@ -89,7 +114,7 @@ export function ProfileContent() {
               <div className='flex justify-center'>
                 <div className='bg-gray-200 relative h-40 w-40 rounded-full overflow-hidden'>
                   <Image
-                    src={imgTest}
+                    src={user.image ? user.image : imgTest}
                     alt="Foto da clinica"
                     fill
                     className='object-cover'
@@ -250,7 +275,7 @@ export function ProfileContent() {
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
-                          <SelectTrigger className='w-full'>
+                          <SelectTrigger>
                             <SelectValue placeholder="Selecione o seu fuso horário" />
                           </SelectTrigger>
                           <SelectContent>

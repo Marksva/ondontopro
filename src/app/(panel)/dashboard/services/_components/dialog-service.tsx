@@ -1,8 +1,5 @@
 "use client"
-
-// - Valor em centavos = Valor em reais * 100
-// - Valor em reais = Valor em centavos / 100
-
+import { useState } from 'react'
 import { DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { useDialogServiceForm, DialogServiceFormData } from "./dialog-service-form"
 import {
@@ -15,15 +12,52 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { convertRealToCents } from '@/utils/convertCurrency'
+import { createNewService } from '../_actions/create-service'
+import { toast } from "sonner"
 
-export function DialogService() {
+interface DialogServiceProps {
+  closeModal: () => void;
+}
+
+export function DialogService({ closeModal }: DialogServiceProps) {
 
   const form = useDialogServiceForm()
+  const [loading, setLoading] = useState(false);
 
 
   async function onSubmit(values: DialogServiceFormData) {
+    setLoading(true);
+    const priceInCents = convertRealToCents(values.price)
+    const hours = parseInt(values.hours) || 0;
+    const minutes = parseInt(values.minutes) || 0;
 
-    console.log(values)
+    // Converter as horas e minutos para duração total em minutos;
+    const duration = (hours * 60) + minutes;
+
+    const response = await createNewService({
+      name: values.name,
+      price: priceInCents,
+      duration: duration
+    })
+
+    setLoading(false);
+
+
+    if (response.error) {
+      toast.error(response.error)
+      return;
+    }
+
+    toast.success("Serviço cadastrado com sucesso")
+    handleCloseModal();
+
+  }
+
+
+  function handleCloseModal() {
+    form.reset();
+    closeModal();
   }
 
 
@@ -145,8 +179,12 @@ export function DialogService() {
             />
           </div>
 
-          <Button type="submit" className="w-full font-semibold text-white">
-            Adicionar serviço
+          <Button
+            type="submit"
+            className="w-full font-semibold text-white"
+            disabled={loading}
+          >
+            {loading ? "Cadastrando..." : "Adicionar serviço"}
           </Button>
 
         </form>

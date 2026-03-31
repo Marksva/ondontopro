@@ -28,11 +28,11 @@ export async function getUserData({ userId }: GetUserDataProps) {
         if (!user) {
             return null;
         }
-        console.log(user);
+        // console.log(user);
         return user;
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return null;
     }
 
